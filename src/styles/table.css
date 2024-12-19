@@ -1,17 +1,38 @@
+.shops-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--background);
+}
+
+[data-theme='dark'] .shops-page {
+  background-color: var(--background-dark);
+}
+
 .shop-table-container {
-  background: white;
+  background: var(--background-secondary);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 2rem;
-  margin: 2rem auto;
+  margin: 0 auto;
   width: 95%;
-  max-width: 100%;
+  max-width: 1600px;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme='dark'] .shop-table-container {
+  background: var(--background-secondary-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .shop-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 16px;
+  min-width: 1200px;
+  position: relative;
 }
 
 .shop-table th,
@@ -19,6 +40,13 @@
   padding: 1.25rem;
   text-align: left;
   border-bottom: 1px solid #eee;
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .shop-table th,
+[data-theme='dark'] .shop-table td {
+  border-bottom: 1px solid #333;
+  color: #e0e0e0;
 }
 
 .shop-table th {
@@ -28,8 +56,17 @@
   font-size: 17px;
 }
 
+[data-theme='dark'] .shop-table th {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
 .shop-table tr:hover {
   background-color: #f8f9fa;
+}
+
+[data-theme='dark'] .shop-table tr:hover {
+  background-color: #252525;
 }
 
 .status-badge {
@@ -51,32 +88,363 @@
 
 .actions {
   display: flex;
+  justify-content: center;
   gap: 0.75rem;
+  align-items: center;
 }
 
 .actions button {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-manager-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.theme-manager-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--text-color);
+}
+
+.theme-manager-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.actions {
+  text-align: center;
+}
+
+/* Disable styles */
+.actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+[data-theme='dark'] table {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme='dark'] th,
+[data-theme='dark'] td {
+  border-color: #333;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+[data-theme='dark'] th {
+  background-color: #2d2d2d;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+[data-theme='dark'] tr:hover {
+  background-color: #252525;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+}
+
+.status-active {
+  background-color: rgba(0, 200, 83, 0.1);
+  color: #00c853;
+}
+
+.status-inactive {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+[data-theme='dark'] .status-active {
+  background-color: rgba(0, 200, 83, 0.2);
+  color: #4caf50;
+}
+
+[data-theme='dark'] .status-inactive {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #ff5252;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 16px;
+}
+
+.load-more-btn {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #1890ff;
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.95rem;
-  transition: all var(--transition-speed) ease;
+  float: right;
 }
 
-.edit-btn {
-  background-color: #e9ecef;
+.load-more-btn:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+.table-wrapper {
+  flex: 1;
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+  min-height: 400px;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 10px;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+/* Tùy chỉnh thanh cuộn */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+} 
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.action-buttons .theme-manager-btn {
+  margin: 0;
+}
+
+/* Thêm màu hover khác nhau cho từng action */
+.theme-manager-btn.login:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+} 
+
+.theme-manager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  margin: 0;
+}
+
+.theme-manager-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.theme-manager-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Màu khác nhau cho từng action khi hover */
+.theme-manager-btn[title="Edit Theme"]:hover {
+  color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.theme-manager-btn[title="Login"]:hover {
+  color: #2196F3;
+  border-color: #2196F3;
+} 
+
+/* Base styles cho action buttons */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Đảm bảo button không có style mặc định */
+.action-btn.login-btn {
+  margin: 0;
+  padding: 8px;
+  font-size: inherit;
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+}
+
+/* Specific hover styles */
+.action-btn.edit-theme-btn:hover {
+  color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.action-btn.login-btn:hover {
+  color: #2196F3;
+  border-color: #2196F3;
+}
+
+.shop-table-container {
+  width: 100%;
+  min-height: 400px; /* hoặc giá trị phù hợp với thiết kế của bạn */
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.shop-table {
+  width: 100%;
+  min-width: 1000px; /* hoặc giá trị phù hợp với tổng chiều rộng của các cột */
+  border-collapse: collapse;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-primary);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+[data-theme='dark'] .no-results {
+  color: var(--text-color);
+}
+
+.table-wrapper {
+  flex: 1;
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+}
+
+.shop-table {
+  width: 100%;
+  min-width: 1200px;
+  border-collapse: collapse;
+}
+
+.shop-table th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 1;
+}
+
+.no-results {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 1rem;
   color: var(--text-primary);
 }
 
-.edit-btn:hover {
-  background-color: #dee2e6;
+[data-theme='dark'] .no-results,
+[data-theme='dark'] .loading-indicator {
+  color: var(--text-color);
 }
 
-.delete-btn {
-  background-color: #fee7e7;
-  color: #dc3545;
+/* Responsive */
+@media (max-width: 1200px) {
+  .shops-page {
+    padding: 1rem;
+  }
+  
+  .shop-table-container {
+    width: 98%;
+    padding: 1rem;
+  }
 }
-
-.delete-btn:hover {
-  background-color: #fdd;
-} 

@@ -1,13 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { themeService } from '../services/themeService';
-import { FaFolder, FaFolderOpen, FaFile, FaSun, FaMoon, FaSync, FaSave } from 'react-icons/fa';
+import { FaFolder, FaFolderOpen, FaFile, FaSun, FaMoon, FaSync, FaSave, FaArrowLeft } from 'react-icons/fa';
 import { IoMdArrowDropdown, IoMdArrowDropright } from 'react-icons/io';
 import { useTheme } from '../hooks/useTheme';
 import CodeEditor from '../components/CodeEditor';
 import EditorTabs from '../components/EditorTabs';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const BackButton = ({ modifiedTabs }) => {
+  const navigate = useNavigate();
+  
+  const handleBack = (e) => {
+    if (modifiedTabs.size > 0) {
+      e.preventDefault();
+      const isConfirmed = window.confirm(
+        'You have unsaved changes. Are you sure you want to leave?'
+      );
+      if (isConfirmed) {
+        navigate('/shops');
+      }
+    }
+  };
+
+  return (
+    <Link to="/shops" className="back-button" onClick={handleBack}>
+      <FaArrowLeft /> Back
+    </Link>
+  );
+};
 
 const ThemeManager = () => {
   const { shopId } = useParams();
@@ -111,27 +133,10 @@ const ThemeManager = () => {
     setFileContent('');
     setActiveFile(null);
     setFiles([]);
-    
     setTabs([]);
     setModifiedTabs(new Set());
     setOpenFiles([]);
     setActiveTab(null);
-
-    console.log('Selected theme:', theme);
-    if (!theme) return;
-
-    setLoading(prev => ({ ...prev, files: true }));
-    try {
-      const {status, files} = await themeService.getThemeFiles(parseInt(shopId), theme.id);
-      if (!status) {
-        throw new Error('Error fetching files');
-      }
-      setFiles(files ?? []);
-    } catch (error) {
-      console.error('Error fetching files:', error);
-    } finally {
-      setLoading(prev => ({ ...prev, files: false }));
-    }
   };
 
   const handleFileSelect = async (filename) => {
@@ -420,10 +425,25 @@ const ThemeManager = () => {
     };
   }, [shopId]);
 
+  const handleBack = (e) => {
+    if (modifiedTabs.size > 0) {
+      e.preventDefault();
+      const isConfirmed = window.confirm(
+        'You have unsaved changes. Are you sure you want to leave?'
+      );
+      if (isConfirmed) {
+        navigate('/shops');
+      }
+    }
+  };
+
   return (
     <div className="theme-manager" data-theme={theme}>
       <div className="theme-header">
         <div className="theme-actions">
+          <Link to="/shops" className="theme-manager-btn" onClick={handleBack}>
+            <FaArrowLeft title="Back to Shops" />
+          </Link>
           <div className="search-box">
             <input
               type="text"
@@ -434,7 +454,7 @@ const ThemeManager = () => {
             />
           </div>
           <button 
-            className="theme-toggle-btn"
+            className="theme-manager-btn"
             onClick={toggleTheme}
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >

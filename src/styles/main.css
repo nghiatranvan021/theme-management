@@ -31,13 +31,31 @@ nav {
 }
 
 .nav-wrapper {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Dark mode styles */
+[data-theme='dark'] .nav-wrapper {
+  background-color: var(--dark-bg);
+  border-bottom: 1px solid var(--dark-border);
+}
+
+/* Active link highlight for dark mode */
+[data-theme='dark'] .nav-items a.active {
+  background-color: var(--dark-highlight);
+  color: var(--dark-text);
+}
+
+/* Hover effect for dark mode */
+[data-theme='dark'] .nav-items a:hover {
+  background-color: var(--dark-hover);
 }
 
 .brand-logo {
@@ -46,6 +64,10 @@ nav {
   color: white;
   text-decoration: none;
   transition: color var(--transition-speed) ease;
+}
+
+[data-theme='light'] .brand-logo {
+  color: black;
 }
 
 .brand-logo:hover {
@@ -66,8 +88,8 @@ nav {
   transition: all var(--transition-speed) ease;
 }
 
-.nav-items a:hover {
-  background-color: var(--accent-color);
+[data-theme='light'] .nav-items a {
+  color: black;
 }
 
 .nav-right {
@@ -96,20 +118,12 @@ nav {
 }
 
 [data-theme='light'] .theme-toggle-btn {
-  color: var(--text-primary);
+  color: black;
 }
 
 [data-theme='light'] nav {
   background-color: white;
   border-bottom: 1px solid var(--border-color);
-}
-
-[data-theme='light'] .nav-items a {
-  color: var(--text-primary);
-}
-
-[data-theme='light'] .brand-logo {
-  color: var(--text-primary);
 }
 
 /* Home Page Styles */
@@ -139,6 +153,12 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+[data-theme='light'] footer {
+  color: black;
+  background-color: white;
+  border-top: 1px solid var(--border-color);
 }
 
 .footer-content {

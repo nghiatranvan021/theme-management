@@ -17,6 +17,11 @@
   --header-height: 64px;
   --footer-height: 60px;
   --transition-speed: 0.3s;
+
+  /* Dark mode */
+  --dark-bg: #1a1a1a;
+  --dark-highlight: #2c2c2c;
+  --dark-hover: #3a3a3a;
 }
 
 [data-theme='light'] {
