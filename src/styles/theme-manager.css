@@ -1,0 +1,762 @@
+.theme-manager {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.file-explorer {
+  width: 300px;
+  background-color: var(--secondary-bg);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  font-family: 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.file-tree {
+  padding: 8px 0;
+}
+
+.folder {
+  user-select: none;
+}
+
+.folder-header {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.folder-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.folder-icon {
+  margin-right: 8px;
+  color: var(--folder-color);
+}
+
+.folder-content {
+  padding-left: 16px;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.file:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.file.active {
+  background-color: #094771;
+}
+
+.file-icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.file-name {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.file-meta {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.theme-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.theme-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-input {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--primary-bg);
+  color: var(--text-color);
+  width: 200px;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.theme-select {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--primary-bg);
+  color: var(--text-color);
+  min-width: 200px;
+}
+
+[data-theme='dark'] {
+  --primary-bg: var(--dark-primary-bg);
+  --secondary-bg: var(--dark-secondary-bg);
+  --border-color: var(--dark-border);
+  --text-color: var(--dark-text);
+}
+
+[data-theme='light'] {
+  --primary-bg: var(--light-primary-bg);
+  --secondary-bg: var(--light-secondary-bg);
+  --border-color: var(--light-border);
+  --text-color: var(--light-text);
+}
+
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refresh-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.editor-content {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.editor-main {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  background-color: var(--primary-bg);
+}
+
+/* CodeMirror custom styles */
+.cm-editor {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.cm-editor .cm-scroller {
+  font-family: 'Consolas', monospace !important;
+  font-size: 14px !important;
+  line-height: 21px !important;
+  overflow: auto !important;
+  min-width: 0 !important;
+}
+
+.cm-editor .cm-content {
+  white-space: pre !important;
+  width: max-content !important;
+}
+
+.cm-editor .cm-line {
+  padding: 0 16px !important;
+  width: max-content !important;
+}
+
+/* Đảm bảo container của content có scroll */
+.cm-editor .cm-contentContainer {
+  height: 100% !important;
+  min-height: 100% !important;
+  flex: 1 !important;
+  max-width: 100% !important;
+  overflow: auto !important;
+}
+
+/* Tùy chỉnh scrollbar */
+.cm-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+.cm-scroller::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+.line-numbers {
+  padding: 16px 8px;
+  background-color: var(--secondary-bg);
+  border-right: 1px solid var(--border-color);
+  color: #858585;
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  text-align: right;
+  user-select: none;
+}
+
+.line-number {
+  padding: 0 8px;
+  line-height: 1.5;
+}
+
+.syntax-highlighter-wrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+.syntax-highlighter-wrapper > pre {
+  margin: 0 !important;
+  min-height: 100%;
+}
+
+.editor-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-color);
+  font-style: italic;
+  background-color: var(--primary-bg);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-color);
+  background-color: var(--primary-bg);
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.editor-header .file-name {
+  color: var(--text-color);
+  font-size: 13px;
+}
+
+.editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.7;
+  border-radius: 3px;
+}
+
+.save-button:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.save-button.modified {
+  color: #fff;
+}
+
+.save-button svg {
+  font-size: 14px;
+}
+
+.save-button span {
+  font-size: 12px;
+}
+
+.editor-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-tabs {
+  display: flex;
+  background: var(--secondary-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabs-list {
+  display: flex;
+  overflow-x: auto;
+}
+
+.editor-tab {
+  position: relative;
+  padding: 8px 32px 8px 16px;
+  background: var(--secondary-bg);
+  border: none;
+  border-right: 1px solid var(--border-color);
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 150px;
+}
+
+.editor-tab.active {
+  background: var(--primary-bg);
+}
+
+.tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.save-button {
+  display: none;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.editor-tab:hover .save-button {
+  display: flex;
+}
+
+.editor-tab.active.modified:hover .modified-indicator {
+  display: none; /* Ẩn chấm xanh */
+}
+
+.save-button:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.close-button {
+  display: none;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.editor-tab:hover .close-button {
+  display: flex;
+}
+
+.close-button:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.modified-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+
+[data-theme='light'] .modified-indicator {
+  background-color: #0066cc;
+  box-shadow: 0 0 4px rgba(0, 102, 204, 0.5);
+}
+
+[data-theme='dark'] .modified-indicator {
+  background-color: #66b3ff;
+  box-shadow: 0 0 4px rgba(102, 179, 255, 0.5);
+}
+
+.tabs-actions {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.save-button {
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.save-button:hover {
+  opacity: 1;
+}
+
+.editors-container {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.editor-pane.active {
+  display: flex;
+  flex: 1;
+}
+
+.editor-textarea-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+}
+
+.editor-textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  margin: 0;
+  border: none;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  white-space: pre;
+  overflow: auto;
+}
+
+.editor-textarea:focus {
+  outline: none;
+}
+
+.editor-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.syntax-highlighter-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: auto;
+}
+
+.syntax-highlighter-wrapper pre {
+  margin: 0 !important;
+  background: transparent !important;
+  pointer-events: none;
+}
+
+.editor-textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  color: transparent;
+  caret-color: var(--text-color);
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  white-space: pre;
+  overflow: auto;
+}
+
+.editor-textarea::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.editor-pre {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 16px;
+  color: transparent;
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 21px;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.editor-textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px;
+  margin: 0;
+  border: none;
+  background: var(--primary-bg);
+  color: var(--text-color);
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 21px;
+  white-space: pre;
+  resize: none;
+  outline: none;
+  overflow: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.editor-textarea::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.syntax-highlighter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.syntax-highlighter > div {
+  padding: 16px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  font-family: 'Consolas', monospace !important;
+  font-size: 14px !important;
+  line-height: 21px !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-shadow: none !important;
+}
+
+.syntax-highlighter code {
+  text-shadow: none !important;
+  font-family: 'Consolas', monospace !important;
+}
+
+.editor-textarea::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Thêm các class mới để fix font rendering */
+pre, code {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: none !important;
+}
+
+/* Tab actions */
+.tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.save-button {
+  display: none;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.editor-tab:hover .save-button {
+  display: flex;
+}
+
+.save-button:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+/* Điều chỉnh lại vị trí của modified indicator và close button */
+.editor-tab .modified-indicator {
+  margin-right: 4px;
+}
+
+.close-button {
+  display: none;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.editor-tab:hover .close-button {
+  display: flex;
+}
+
+.close-button:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.header-save-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  background-color: var(--accent-color);
+  color: #333333;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.header-save-button:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.header-save-button svg {
+  font-size: 14px;
+}
+
+[data-theme='light'] .header-save-button {
+  color: var(--primary-color);
+  border-color: var(--border-color);
+}
+
+[data-theme='dark'] .header-save-button {
+  color: #ffffff;
+  border-color: var(--border-color);
+}
+

@@ -1,0 +1,147 @@
+@import './variables.css';
+@import './table.css';
+@import './theme-manager.css';
+
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+.dashboard{
+    display: contents;
+}
+
+/* Navigation Styles */
+nav {
+  height: var(--header-height);
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.brand-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+}
+
+.brand-logo:hover {
+  color: var(--accent-color);
+}
+
+.nav-items {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-items a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all var(--transition-speed) ease;
+}
+
+.nav-items a:hover {
+  background-color: var(--accent-color);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-speed) ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: rotate(15deg);
+}
+
+[data-theme='light'] .theme-toggle-btn {
+  color: var(--text-primary);
+}
+
+[data-theme='light'] nav {
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme='light'] .nav-items a {
+  color: var(--text-primary);
+}
+
+[data-theme='light'] .brand-logo {
+  color: var(--text-primary);
+}
+
+/* Home Page Styles */
+.home-page {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.home-page p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Footer Styles */
+footer {
+  height: var(--footer-height);
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-content {
+  text-align: center;
+  padding: 1rem;
+} 

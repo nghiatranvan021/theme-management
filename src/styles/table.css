@@ -1,0 +1,82 @@
+.shop-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 95%;
+  max-width: 100%;
+}
+
+.shop-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.shop-table th,
+.shop-table td {
+  padding: 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.shop-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 17px;
+}
+
+.shop-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background-color: #e6f7f0;
+  color: #0d9668;
+}
+
+.status-badge.inactive {
+  background-color: #fee7e7;
+  color: #dc3545;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all var(--transition-speed) ease;
+}
+
+.edit-btn {
+  background-color: #e9ecef;
+  color: var(--text-primary);
+}
+
+.edit-btn:hover {
+  background-color: #dee2e6;
+}
+
+.delete-btn {
+  background-color: #fee7e7;
+  color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #fdd;
+} 
