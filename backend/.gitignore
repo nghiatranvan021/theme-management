@@ -1,6 +1,7 @@
 # Environment variables
 .env
+.envrc
 .env.local
 .env.*.local
 node_modules/
-.envrc
+logs

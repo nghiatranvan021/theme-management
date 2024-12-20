@@ -40,8 +40,8 @@ module.exports = {
       filename: 'index.html',
       meta: {
         'Content-Security-Policy': {
-          'http-equiv': 'Content-Security-Policy',
-          'content': "default-src 'self'; connect-src 'self' https://pub.go.alireviews.dev; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+          // 'http-equiv': 'Content-Security-Policy',
+          // 'content': "default-src 'self'; connect-src 'self' http://[fd07:b51a:cc66:0:a617:db5e:ab7:e9f1]:3001; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
         }
       }
     })

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { shopService } from '../services/shopService';
-import { Input, Select } from 'antd';
+import { Input, Select, Modal, message } from 'antd';
 import { debounce } from 'lodash';
 import { FaEdit, FaSignInAlt } from 'react-icons/fa';
 const { Search } = Input;
@@ -43,11 +43,16 @@ const FilterSection = React.memo(({
       <Select.Option value="shopify">Shopify</Select.Option>
       <Select.Option value="advanced">Advanced</Select.Option>
       <Select.Option value="plus">Shopify Plus</Select.Option>
+      <Select.Option value="partner_test">Partner Test</Select.Option>
     </Select>
   </div>
 ));
 
 const ShopTableRow = ({ shop }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [token, setToken] = useState('');
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     try {
       const { status, token, shop_domain } = await shopService.generateLoginToken(
@@ -73,19 +78,39 @@ const ShopTableRow = ({ shop }) => {
     }
   };
 
+  const handleEditClick = (e) => {
+    e.preventDefault();
+    navigate(`/theme/${shop.shop_id}`);
+  };
+
+  const handleModalOk = () => {
+    if (!token.trim()) {
+      message.error('Please enter token');
+      return;
+    }
+    // Validate token here if needed
+    setIsModalVisible(false);
+    navigate(`/theme/${shop.shop_id}?token=${token}`);
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    setToken('');
+  };
+
   return (
     <tr>
       <td>{shop.shop_id}</td>
-      <td>{shop.shop_name}</td>
+      <td>{shop.shop_owner}</td>
       <td>
-        <a href={`https://${shop.raw_domain}`} target="_blank" rel="noreferrer">
-          {shop.raw_domain}
+        <a href={`https://${shop.myshopify_domain}`} target="_blank" rel="noreferrer">
+          {shop.myshopify_domain}
         </a>
       </td>
       <td>{shop.app_plan}</td>
       <td>
-        <span className={`status-badge ${shop.shopify_plan.toLowerCase()}`}>
-          {shop.shopify_plan}
+        <span className={`status-badge ${shop.plan_name.toLowerCase()}`}>
+          {shop.plan_name}
         </span>
       </td>
       <td>{shop.email}</td>

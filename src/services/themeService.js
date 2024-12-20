@@ -10,7 +10,11 @@ export const themeService = {
                     shop_id: shopId
                 }
             });
-            return response;
+
+            return {
+                status: response.status,
+                themes: response.themes.themes ?? [],
+            };
         } catch (error) {
             console.error('Error in getThemes:', {
                 shopId,
@@ -28,7 +32,7 @@ export const themeService = {
             const response = await axiosInstance.get(`/operation/theme/files`, {
                 params: {
                     shop_id: shopId,
-                    theme_id: themeId
+                    theme_id: themeId,
                 }
             });
             return response;

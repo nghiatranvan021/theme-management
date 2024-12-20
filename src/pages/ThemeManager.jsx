@@ -9,28 +9,6 @@ import EditorTabs from '../components/EditorTabs';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const BackButton = ({ modifiedTabs }) => {
-  const navigate = useNavigate();
-  
-  const handleBack = (e) => {
-    if (modifiedTabs.size > 0) {
-      e.preventDefault();
-      const isConfirmed = window.confirm(
-        'You have unsaved changes. Are you sure you want to leave?'
-      );
-      if (isConfirmed) {
-        navigate('/shops');
-      }
-    }
-  };
-
-  return (
-    <Link to="/shops" className="back-button" onClick={handleBack}>
-      <FaArrowLeft /> Back
-    </Link>
-  );
-};
-
 const ThemeManager = () => {
   const { shopId } = useParams();
   const { theme, toggleTheme } = useTheme();
@@ -71,6 +49,7 @@ const ThemeManager = () => {
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const currentContentRef = useRef({});
+  const navigate = useNavigate();
 
   const fetchThemes = async () => {
     setLoading(prev => ({ ...prev, themes: true }));
@@ -79,6 +58,7 @@ const ThemeManager = () => {
       if (!status) {
         throw new Error('Error fetching themes');
       }
+      console.log('Themes:', themes);
       setThemes(themes ?? []);
       
       if (!selectedTheme && themes?.length) {
@@ -110,13 +90,17 @@ const ThemeManager = () => {
     
     setLoading(prev => ({ ...prev, files: true }));
     try {
-      const {status, files} = await themeService.getThemeFiles(parseInt(shopId), selectedTheme.id);
+      const {status, files} = await themeService.getThemeFiles(
+        parseInt(shopId), 
+        selectedTheme.id
+      );
       if (!status) {
         throw new Error('Error fetching files');
       }
       setFiles(files ?? []);
     } catch (error) {
       console.error('Error fetching files:', error);
+      toast.error('Failed to fetch theme files');
     } finally {
       setLoading(prev => ({ ...prev, files: false }));
     }
@@ -441,6 +425,8 @@ const ThemeManager = () => {
       if (isConfirmed) {
         navigate('/shops');
       }
+    } else {
+      navigate('/shops');
     }
   };
 
