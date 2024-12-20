@@ -80,6 +80,13 @@ const ThemeManager = () => {
         throw new Error('Error fetching themes');
       }
       setThemes(themes ?? []);
+      
+      if (!selectedTheme && themes?.length) {
+        const mainTheme = themes.find(t => t.role === 'main');
+        if (mainTheme) {
+          setSelectedTheme(mainTheme);
+        }
+      }
     } catch (error) {
       console.error('Error fetching themes:', error);
     } finally {
