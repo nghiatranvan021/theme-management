@@ -164,4 +164,36 @@ footer {
 .footer-content {
   text-align: center;
   padding: 1rem;
-} 
+}
+
+/* Toast container styles */
+.Toastify__toast-container {
+  z-index: 99999;
+  position: fixed;
+  pointer-events: auto;
+}
+
+.Toastify__toast {
+  font-family: inherit;
+  border-radius: 8px;
+  padding: 16px;
+  pointer-events: auto;
+  min-height: auto;
+}
+
+.Toastify__toast--success {
+  background: var(--success-color, #97e6cc);
+  color: var(--success-text, #000);
+}
+
+.Toastify__toast--error {
+  background: var(--error-color, #e0a9a9);
+  color: var(--error-text, #000);
+}
+
+/* Remove the fixed positioning from the main Toastify container */
+.Toastify {
+  position: static !important;
+  pointer-events: none;
+  width: auto;
+}

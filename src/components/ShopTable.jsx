@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { shopService } from '../services/shopService';
 import { Input, Select, Modal, message } from 'antd';
 import { debounce } from 'lodash';
@@ -11,7 +11,8 @@ const FilterSection = React.memo(({
   onSearchChange, 
   appPlanValue,
   shopifyPlanValue,
-  handleFilterChange 
+  handleFilterChange,
+  appHandle,
 }) => (
   <div className="filter-section">
     <Input
@@ -29,7 +30,7 @@ const FilterSection = React.memo(({
       value={appPlanValue}
     >
       <Select.Option value="free">Free</Select.Option>
-      <Select.Option value="pro">Pro</Select.Option>
+      <Select.Option value="super">Super</Select.Option>
     </Select>
     <Select
       placeholder="Shopify Plan"
@@ -45,10 +46,22 @@ const FilterSection = React.memo(({
       <Select.Option value="plus">Shopify Plus</Select.Option>
       <Select.Option value="partner_test">Partner Test</Select.Option>
     </Select>
+
+    <Select
+        placeholder="App Handle"
+        onChange={(value) => handleFilterChange('app_handle', value)}
+        style={{ width: 150 }}
+        allowClear
+        value={appHandle}
+        defaultValue={"go"}
+    >
+      <Select.Option value="php">PHP</Select.Option>
+      <Select.Option value="go">Go</Select.Option>
+    </Select>
   </div>
 ));
 
-const ShopTableRow = ({ shop }) => {
+const ShopTableRow = ({ shop, appHandle }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [token, setToken] = useState('');
   const navigate = useNavigate();
@@ -57,7 +70,9 @@ const ShopTableRow = ({ shop }) => {
     try {
       const { status, token, shop_domain } = await shopService.generateLoginToken(
         shop.shop_id,
-        shop.email
+        shop.email,
+        'admin',
+        appHandle,
       );
       
       if (!status || !token) {
@@ -100,16 +115,24 @@ const ShopTableRow = ({ shop }) => {
 
   return (
     <tr>
-      <td>{shop.shop_id}</td>
+      <td>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span 
+            className={`status-dot ${shop.is_active ? 'active' : 'inactive'}`}
+            title={shop.is_active ? 'Active' : 'Inactive'}
+          />
+          {shop.shop_id}
+        </div>
+      </td>
       <td>{shop.shop_owner}</td>
       <td>
-        <a href={`https://${shop.myshopify_domain}`} target="_blank" rel="noreferrer">
-          {shop.myshopify_domain}
+        <a href={`https://${shop.domain}`} target="_blank" rel="noreferrer">
+          {shop.domain}
         </a>
       </td>
       <td>{shop.app_plan}</td>
       <td>
-        <span className={`status-badge ${shop.plan_name.toLowerCase()}`}>
+        <span className={`status-badge ${shop.plan_name}`}>
           {shop.plan_name}
         </span>
       </td>
@@ -117,7 +140,7 @@ const ShopTableRow = ({ shop }) => {
       <td className="actions">
         <div className="action-buttons">
           <Link 
-            to={`/theme/${shop.shop_id}`} 
+            to={`/theme/${shop.shop_id}?app_handle=${appHandle}`}
             className="action-btn edit-theme-btn" 
             title="Edit Theme"
           >
@@ -137,6 +160,11 @@ const ShopTableRow = ({ shop }) => {
 };
 
 const ShopTable = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const queryAppHandle = searchParams.get('app_handle');
+
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -147,6 +175,7 @@ const ShopTable = () => {
     email: undefined,
     app_plan: undefined,
     shopify_plan: undefined,
+    app_handle: queryAppHandle || 'go',
     q: undefined
   });
 
@@ -155,6 +184,7 @@ const ShopTable = () => {
 
   const [appPlanValue, setAppPlanValue] = useState();
   const [shopifyPlanValue, setShopifyPlanValue] = useState();
+  const [appHandle, setAppHandle] = useState(queryAppHandle || 'go');
 
   const debouncedSearch = React.useMemo(
     () => 
@@ -199,7 +229,18 @@ const ShopTable = () => {
   const handleFilterChange = (key, value) => {
     if (key === 'app_plan') setAppPlanValue(value);
     if (key === 'shopify_plan') setShopifyPlanValue(value);
-    
+    if (key === 'app_handle') {
+      setAppHandle(value);
+      // Update URL when app_handle changes
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set('app_handle', value);
+      } else {
+        newSearchParams.delete('app_handle');
+      }
+      navigate(`?${newSearchParams.toString()}`);
+    }
+
     setFilters(prev => ({
       ...prev,
       [key]: value
@@ -281,7 +322,9 @@ const ShopTable = () => {
         onSearchChange={handleSearchChange}
         appPlanValue={appPlanValue}
         shopifyPlanValue={shopifyPlanValue}
+        appHandle={appHandle}
         handleFilterChange={handleFilterChange}
+        filters={filters}
       />
       
       <div className="table-wrapper" ref={tableRef}>
@@ -304,7 +347,11 @@ const ShopTable = () => {
               </tr>
             ) : (
               shops.map((shop) => (
-                <ShopTableRow key={shop.shop_id} shop={shop} />
+                <ShopTableRow 
+                  key={shop.shop_id} 
+                  shop={shop} 
+                  appHandle={appHandle}
+                />
               ))
             )}
           </tbody>

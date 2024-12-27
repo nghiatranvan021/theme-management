@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { themeService } from '../services/themeService';
 import { FaFolder, FaFolderOpen, FaFile, FaSun, FaMoon, FaSync, FaSave, FaArrowLeft } from 'react-icons/fa';
 import { IoMdArrowDropdown, IoMdArrowDropright } from 'react-icons/io';
@@ -11,6 +11,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const ThemeManager = () => {
   const { shopId } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const appHandle = searchParams.get('app_handle') || 'go';
   const { theme, toggleTheme } = useTheme();
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState(() => {
@@ -52,17 +55,17 @@ const ThemeManager = () => {
   const navigate = useNavigate();
 
   const fetchThemes = async () => {
+    console.log('Fetching themes for shop:', shopId, appHandle);
     setLoading(prev => ({ ...prev, themes: true }));
     try {
-      const {status, themes} = await themeService.getThemes(parseInt(shopId));
+      const {status, themes} = await themeService.getThemes(parseInt(shopId), appHandle);
       if (!status) {
         throw new Error('Error fetching themes');
       }
-      console.log('Themes:', themes);
       setThemes(themes ?? []);
       
       if (!selectedTheme && themes?.length) {
-        const mainTheme = themes.find(t => t.role === 'main');
+        const mainTheme = themes.find(t => t.role === 'MAIN');
         if (mainTheme) {
           setSelectedTheme(mainTheme);
         }
@@ -90,16 +93,16 @@ const ThemeManager = () => {
     
     setLoading(prev => ({ ...prev, files: true }));
     try {
-      const {status, files} = await themeService.getThemeFiles(
+      const {status,error, files} = await themeService.getThemeFiles(
         parseInt(shopId), 
-        selectedTheme.id
+        selectedTheme.id,
+        appHandle
       );
       if (!status) {
-        throw new Error('Error fetching files');
+        throw new Error(error);
       }
       setFiles(files ?? []);
     } catch (error) {
-      console.error('Error fetching files:', error);
       toast.error('Failed to fetch theme files');
     } finally {
       setLoading(prev => ({ ...prev, files: false }));
@@ -144,7 +147,12 @@ const ThemeManager = () => {
       setIsLoadingFile(true);
       setLoading(prev => ({ ...prev, content: true }));
       
-      const response = await themeService.getFileContent(parseInt(shopId), selectedTheme.id, filename);
+      const response = await themeService.getFileContent(
+        parseInt(shopId), 
+        selectedTheme.id, 
+        filename,
+        appHandle
+      );
       
       if (!response || !response.content) {
         throw new Error('Invalid file content response');
@@ -168,6 +176,7 @@ const ThemeManager = () => {
 
     } catch (error) {
       console.error('Error loading file content:', error);
+      toast.error('Failed to load file content. Please try again.');
     } finally {
       setLoading(prev => ({ ...prev, content: false }));
       setTimeout(() => {
@@ -199,7 +208,7 @@ const ThemeManager = () => {
     
     const groups = {};
     
-    // Khởi tạo các folder theo thứ tự định sẵn
+    // Khởi tạo các folder theo thứ tự định s���n
     folderOrder.forEach(folder => {
       groups[folder] = [];
     });
@@ -300,8 +309,6 @@ const ThemeManager = () => {
   };
 
   const handleContentChange = (tabId, newContent) => {
-    console.log('Content changed:', { tabId, newContent });
-    
     currentContentRef.current[tabId] = newContent;
     
     setTabs(prev => prev.map(tab =>
@@ -324,10 +331,7 @@ const ThemeManager = () => {
 
   const handleSave = async (tabId) => {
     const currentContent = currentContentRef.current[tabId];
-    console.log('Current content from ref:', currentContent);
-
     if (!currentContent) {
-      console.error('No content found for tab:', tabId);
       return;
     }
 
@@ -337,7 +341,8 @@ const ThemeManager = () => {
         parseInt(shopId),
         selectedTheme.id,
         tabId,
-        currentContent
+        currentContent,
+        appHandle
       );
 
       if (response.status) {
@@ -360,7 +365,6 @@ const ThemeManager = () => {
         toast.error(response.message || 'Failed to save file');
       }
     } catch (error) {
-      console.error('Error saving file:', error);
       toast.error('Failed to save file. Please try again.');
     } finally {
       setIsSaving(false);
@@ -423,10 +427,10 @@ const ThemeManager = () => {
         'You have unsaved changes. Are you sure you want to leave?'
       );
       if (isConfirmed) {
-        navigate('/shops');
+        navigate(`/shops?app_handle=${appHandle}`);
       }
     } else {
-      navigate('/shops');
+      navigate(`/shops?app_handle=${appHandle}`);
     }
   };
 
@@ -434,7 +438,7 @@ const ThemeManager = () => {
     <div className="theme-manager" data-theme={theme}>
       <div className="theme-header">
         <div className="theme-actions">
-          <Link to="/shops" className="theme-manager-btn" onClick={handleBack}>
+          <Link to={`/shops?app_handle=${appHandle}`} className="theme-manager-btn" onClick={handleBack}>
             <FaArrowLeft title="Back to Shops" />
           </Link>
           <div className="search-box">

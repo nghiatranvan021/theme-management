@@ -448,3 +448,20 @@ tr:hover {
     padding: 1rem;
   }
 }
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.active {
+  background-color: #4CAF50;  /* Green for active */
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+.status-dot.inactive {
+  background-color: #f44336;  /* Red for inactive */
+  box-shadow: 0 0 4px rgba(244, 67, 54, 0.5);
+}

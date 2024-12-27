@@ -2,82 +2,71 @@ import axiosInstance from '../config/axios';
 
 export const themeService = {
     // Get all themes for a shop
-    getThemes: async (shopId) => {
+    getThemes: async (shopId,app_handle) => {
         try {
-            console.log(`Fetching themes for shop ${shopId}`);
             const response = await axiosInstance.get(`/operation/themes`, {
                 params: {
-                    shop_id: shopId
+                    shop_id: shopId,
+                    app_handle:app_handle
                 }
             });
 
             return {
                 status: response.status,
-                themes: response.themes.themes ?? [],
+                themes: response.themes ?? [],
             };
         } catch (error) {
-            console.error('Error in getThemes:', {
-                shopId,
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
+
             throw error;
         }
     },
 
     // Get all files for a theme
-    getThemeFiles: async (shopId, themeId) => {
+    getThemeFiles: async (shopId, themeId, appHandle) => {
         try {
             const response = await axiosInstance.get(`/operation/theme/files`, {
                 params: {
                     shop_id: shopId,
                     theme_id: themeId,
+                    app_handle:appHandle
                 }
             });
             return response;
         } catch (error) {
-            console.error('Error in getThemeFiles:', error);
             throw error;
         }
     },
 
     // Get content of a specific file
-    getFileContent: async (shopId, themeId, fileName) => {
+    getFileContent: async (shopId, themeId, filename, appHandle) => {
         try {
             const response = await axiosInstance.get(`/operation/theme/file/content`, {
                 params: {
                     shop_id: shopId,
                     theme_id: themeId,
-                    file_name: fileName
+                    file_name: filename,
+                    app_handle:appHandle
                 }
             });
             return response;
         } catch (error) {
-            console.error('Error in getFileContent:', error);
             throw error;
         }
     },
 
-    async saveFile(shopId, themeId, fileName, content) {
+    async saveFile(shopId, themeId, filename, content, appHandle) {
         try {
             const response = await axiosInstance.post(`/operation/theme/file/content`, {
                 shop_id: shopId,
                 theme_id: themeId,
-                file_name: fileName,
-                content
+                file_name: filename,
+                content,
+                app_handle:appHandle
             });
 
             return response;
         } catch (error) {
-            console.error('Error in saveFile:', {
-                shopId,
-                themeId,
-                fileName,
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
+
             throw error;
         }
     }

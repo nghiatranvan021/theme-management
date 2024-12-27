@@ -92,6 +92,9 @@ const shopSchema = new mongoose.Schema({
   app_plan: {
     type: String,
     required: true
+  },
+  is_active: {
+     type: Boolean,
   }
 }, {
   timestamps: true, // This will handle created_at and updated_at

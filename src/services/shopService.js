@@ -18,12 +18,13 @@ export const shopService = {
             throw error;
         }
     },
-    generateLoginToken: async (shopId, email, role = 'admin') => {
+    generateLoginToken: async (shopId, email, role = 'admin', appHandle = 'go') => {
         try {
             const response = await axiosInstance.post('/operation/cs-token', {
                 shop_id: shopId,
                 email: email,
-                role: role
+                role: role,
+                app_handle: appHandle
             });
             return response;
         } catch (error) {

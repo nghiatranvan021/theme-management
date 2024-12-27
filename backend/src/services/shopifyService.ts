@@ -38,6 +38,32 @@ interface ThemeFilesUpsertResponse {
   };
 }
 
+// interface list themes
+export interface ListThemesResponse {
+  themes: Themes
+}
+
+export interface Themes {
+  edges: Edge[]
+}
+
+export interface Edge {
+  node: Node
+}
+
+export interface Node {
+  createdAt: string
+  id: string
+  name: string
+  prefix: string
+  processing: boolean
+  processingFailed: boolean
+  role: string
+  themeStoreId?: number
+  updatedAt: string
+}
+
+
 export const createThemeService = (shopDomain: string, accessToken: string) => {
   const GID_THEME = 'gid://shopify/OnlineStoreTheme/';
 
@@ -210,12 +236,45 @@ export const createThemeService = (shopDomain: string, accessToken: string) => {
       throw new Error(response.themeFilesUpsert.userErrors[0].message);
     }
   };
+  const getThemes = async () => {
+    const query = `query ThemeList {
+      themes(first: 20) {
+        edges {
+          node {
+            createdAt
+            id
+            name
+            prefix
+            processing
+            processingFailed
+            role
+            themeStoreId
+            updatedAt
+          }
+          cursor
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+      }
+    }`
+
+    const response = await graphqlRequest<ListThemesResponse>(query, {});
+
+    if (!response.themes.edges.length) {
+      throw new Error('No themes found');
+    }
+
+    return response.themes.edges;
+  }
 
   return {
     getAssets,
     getAsset,
     findContent,
-    updateContent
+    updateContent,
+    getThemes
   };
 };
 
