@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import {config} from "../config/config";
+import {config} from "../config/config.js";
 import {logger} from '../utils/logger.js';
 
 const shopConnection = mongoose.createConnection(config.mongodb.url as string, {

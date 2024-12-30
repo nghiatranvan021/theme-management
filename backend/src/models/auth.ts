@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import {config} from "../config/config";
+import {config} from "../config/config.js";
 import {logger} from '../utils/logger.js';
 
 interface IAuth extends Document {

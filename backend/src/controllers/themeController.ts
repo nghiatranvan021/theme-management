@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
-import {createThemeService} from "../services/shopifyService";
-import Auth from "../models/auth";
-import {decrypt} from "../utils/cryptor";
-import {config} from "../config/config";
-import {findByShopId} from "../models/mysql/Shop";
+import {createThemeService} from "../services/shopifyService.js";
+import Auth from "../models/auth.js";
+import {decrypt} from "../utils/cryptor.js";
+import {config} from "../config/config.js";
+import {findByShopId} from "../models/mysql/Shop.js";
 
 export const themeController = {
     // Get all themes for a shop

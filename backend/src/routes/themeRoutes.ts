@@ -1,5 +1,5 @@
-import express, { Request, Response } from 'express';
-import { themeController } from '../controllers/themeController';
+import express from 'express';
+import { themeController } from '../controllers/themeController.js';
 
 const router = express.Router();
 

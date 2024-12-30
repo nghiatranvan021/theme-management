@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
-import {Shop} from '../models/Shop';
+import {Shop} from '../models/Shop.js';
 import jwt from 'jsonwebtoken';
-import {config} from '../config/config';
-import Auth from "../models/auth";
-import {findAll, findByShopId} from "../models/mysql/Shop";
+import {config} from '../config/config.js';
+import Auth from "../models/auth.js";
+import {findAll, findByShopId} from "../models/mysql/Shop.js";
 
 export const shopController = {
     // Get shops with filters

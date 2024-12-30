@@ -4,9 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm src/server.ts",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
+    "start": "node --experimental-specifier-resolution=node dist/server.js",
     "dev": "nodemon",
-    "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "test": "jest"
   },
@@ -38,8 +39,5 @@
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
-  },
-  "nodemonConfig": {
-    "exec": "node --loader ts-node/esm src/server.ts"
   }
 }

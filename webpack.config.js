@@ -15,7 +15,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/'  // This is important for client-side routing
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -31,35 +31,28 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   plugins: [
     new webpack.DefinePlugin(envKeys),
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      filename: 'index.html',
-      meta: {
-        'Content-Security-Policy': {
-          // 'http-equiv': 'Content-Security-Policy',
-          // 'content': "default-src 'self'; connect-src 'self' http://[fd07:b51a:cc66:0:a617:db5e:ab7:e9f1]:3001; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
-        }
-      }
+      filename: 'index.html'
     })
   ],
   devServer: {
     static: {
       directory: path.join(__dirname, 'public')
     },
-    historyApiFallback: true,  // This is important for client-side routing
+    historyApiFallback: true,
     hot: true,
     port: 3000,
     open: true,
-    proxy: [
-      {
-        context: ['/api', '/operation', '/themes', '/files'],
-        target: process.env.REACT_APP_API_URL,  // Using the REACT_APP_API_URL value
-        changeOrigin: true
-      }
-    ]
+    proxy: {
+      '/api': 'http://localhost:3001',
+      '/operation': 'http://localhost:3001',
+      '/themes': 'http://localhost:3001',
+      '/files': 'http://localhost:3001'
+    }
   }
 }; 
