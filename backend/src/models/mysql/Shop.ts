@@ -1,39 +1,49 @@
 import mysql from 'mysql2/promise';
-import {logger} from '../../utils/logger.js';
+import { logger } from '../../utils/logger.js';
 import { config } from '../../config/config.js';
 
 const pool = mysql.createPool({
-  host: config.mysql.host,
-  port: config.mysql.port,
-  user: config.mysql.user,
-  password: config.mysql.password,
-  database: 'alireviews',  // Changed to match your database name
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0
+    host: config.mysql.host,
+    port: config.mysql.port,
+    user: config.mysql.user,
+    password: config.mysql.password,
+    database: 'alireviews',
 });
 
 // Test connection on startup
-pool.getConnection()
-  .then(connection => {
-    logger.info('MySQL Database alireviews connected successfully');
-    connection.release();
-  })
-  .catch(err => {
-      logger.error('MySQL connection alireviews error:', err);
-    process.exit(1); // Exit if we can't connect to database
-  });
+const testConnection = async () => {
+    try {
+        const connection = await pool.getConnection();
+        logger.info('MySQL connection test successful');
+        connection.release();
+    } catch (err) {
+        logger.error('MySQL connection test error:', err);
+        process.exit(1);
+    }
+};
+
+testConnection();
 
 // Handle pool errors
 pool.on("enqueue", () => {
-  logger.error('Connection pool queue is full');
-  process.exit(1);
+    logger.error('Connection pool queue is full');
+    process.exit(1);
+});
+
+// Close the pool when the process is interrupted
+process.on('SIGINT', async () => {
+    try {
+        await pool.end();
+        logger.info('MySQL connection pool closed');
+        process.exit(0);
+    } catch (err) {
+        logger.error('Error closing MySQL connection pool:', err);
+        process.exit(1);
+    }
 });
 
 export interface IShop extends mysql.RowDataPacket {
-    shop_id: string;
+    shop_id: number;
     shop_name: string;
     domain: string;
     shop_email: string;
@@ -107,11 +117,11 @@ export interface IShop extends mysql.RowDataPacket {
 }
 
 interface FilterOptions {
-  limit?: number;
-  cursor?: string;
-  query?: string;
-  app_plan?: string;
-  plan_name?: string;
+    limit?: number;
+    cursor?: string;
+    query?: string;
+    app_plan?: string;
+    plan_name?: string;
 }
 
 export const findAll = async (options: FilterOptions = {}): Promise<{ shops: IShop[], nextCursor?: string }> => {
@@ -151,8 +161,8 @@ export const findAll = async (options: FilterOptions = {}): Promise<{ shops: ISh
             params.push(plan_name);
         }
 
-        const whereClause = whereConditions.length 
-            ? `WHERE ${whereConditions.join(' AND ')}` 
+        const whereClause = whereConditions.length
+            ? `WHERE ${whereConditions.join(' AND ')}`
             : '';
 
         const query_str = `
@@ -169,7 +179,7 @@ export const findAll = async (options: FilterOptions = {}): Promise<{ shops: ISh
         // Get items for current page
         const hasMore = rows.length > limit;
         const shops = rows.slice(0, limit);
-        
+
         // Get cursor for next page
         const nextCursor = hasMore ? shops[shops.length - 1].created_at.toISOString() : undefined;
 

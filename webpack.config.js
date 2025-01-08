@@ -48,11 +48,11 @@ module.exports = {
     hot: true,
     port: 3000,
     open: true,
-    proxy: {
-      '/api': 'http://localhost:3001',
-      '/operation': 'http://localhost:3001',
-      '/themes': 'http://localhost:3001',
-      '/files': 'http://localhost:3001'
-    }
+    // proxy: {
+    //   '/api': 'http://localhost:3001',
+    //   '/operation': 'http://localhost:3001',
+    //   '/themes': 'http://localhost:3001',
+    //   '/files': 'http://localhost:3001'
+    // }
   }
 }; 

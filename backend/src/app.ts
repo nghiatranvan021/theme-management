@@ -17,10 +17,10 @@ const app: Express = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['*'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['*'],
-  credentials: true
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['*'],
+    credentials: false
 };
 
 // Apply CORS before other middleware
@@ -28,30 +28,30 @@ app.use(cors(corsOptions));
 
 // Middleware
 app.use(
-  helmet({
-    contentSecurityPolicy: false
-  })
+    helmet({
+        contentSecurityPolicy: false
+    })
 );
 
 app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
 // API Routes first
-app.use('/', shopRoutes);
+// app.use('/', shopRoutes);
 app.use('/', themeRoutes);
 
 // Static files serving with explicit mime types
 app.get('*.js', (req, res, next) => {
-  res.type('application/javascript');
-  next();
+    res.type('application/javascript');
+    next();
 });
 
 app.get('*.css', (req, res, next) => {
-  res.type('text/css');
-  next();
+    res.type('text/css');
+    next();
 });
 
 // Serve static files
@@ -59,7 +59,7 @@ app.use('/', express.static(join(__dirname, '../../dist')));
 
 // SPA fallback - must be last
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '../../dist/index.html'));
+    res.sendFile(join(__dirname, '../../dist/index.html'));
 });
 
 // Error handling

@@ -427,10 +427,10 @@ const ThemeManager = () => {
         'You have unsaved changes. Are you sure you want to leave?'
       );
       if (isConfirmed) {
-        navigate(`/shops?app_handle=${appHandle}`);
+        navigate(`/`);
       }
     } else {
-      navigate(`/shops?app_handle=${appHandle}`);
+      navigate(`/`);
     }
   };
 
@@ -438,8 +438,8 @@ const ThemeManager = () => {
     <div className="theme-manager" data-theme={theme}>
       <div className="theme-header">
         <div className="theme-actions">
-          <Link to={`/shops?app_handle=${appHandle}`} className="theme-manager-btn" onClick={handleBack}>
-            <FaArrowLeft title="Back to Shops" />
+          <Link to={`/`} className="theme-manager-btn" onClick={handleBack}>
+            <FaArrowLeft title="Back" />
           </Link>
           <div className="search-box">
             <input

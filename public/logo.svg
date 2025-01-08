@@ -1,0 +1,28 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="40" cy="40" r="36" fill="currentColor" class="logo-bg"/>
+  
+  <!-- Paint Palette -->
+  <path d="M60 40c0 11-9 20-20 20s-20-9-20-20 9-20 20-20 20 9 20 20" 
+        fill="#B87C4C" 
+        stroke="currentColor" 
+        stroke-width="2"/>
+  
+  <!-- Color Dots -->
+  <circle cx="32" cy="30" r="4" fill="#A4A390"/>
+  <circle cx="48" cy="30" r="4" fill="#8E7F72"/>
+  <circle cx="40" cy="45" r="4" fill="currentColor"/>
+  
+  <!-- Brush Handle -->
+  <path d="M55 25L65 15" 
+        stroke="currentColor" 
+        stroke-width="3" 
+        stroke-linecap="round"/>
+  
+  <style>
+    svg { color: #4A4539; }
+    [data-theme="dark"] svg { color: #F3E9DC; }
+    .logo-bg { fill: #F3E9DC; }
+    [data-theme="dark"] .logo-bg { fill: #4A4539; }
+  </style>
+</svg> 

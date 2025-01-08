@@ -1,23 +1,23 @@
-import {Request, Response} from 'express';
-import {createThemeService} from "../services/shopifyService.js";
+import { Request, Response } from 'express';
+import { createThemeService } from "../services/shopifyService.js";
 import Auth from "../models/auth.js";
-import {decrypt} from "../utils/cryptor.js";
-import {config} from "../config/config.js";
-import {findByShopId} from "../models/mysql/Shop.js";
+import { decrypt } from "../utils/cryptor.js";
+import { config } from "../config/config.js";
+import { findByShopId } from "../models/mysql/Shop.js";
 
 export const themeController = {
     // Get all themes for a shop
     getThemes: async (req: Request, res: Response) => {
         try {
-            const {shop_id, app_handle} = req.query;
-            if (!app_handle){
-                res.status(400).json({status:false,error: 'Missing required parameters'});
+            const { shop_id, app_handle } = req.query;
+            if (!app_handle) {
+                res.status(400).json({ status: false, error: 'Missing required parameters' });
                 return
             }
 
-            const {domain, access_token} = await themeController.getAccessToken(Number(shop_id), app_handle as string);
+            const { domain, access_token } = await themeController.getAccessToken(Number(shop_id), app_handle as string);
             if (!access_token) {
-                res.status(404).json({status: false, error: 'Access token not found'});
+                res.status(404).json({ status: false, error: 'Access token not found' });
                 return
             }
 
@@ -27,7 +27,7 @@ export const themeController = {
                 throw new Error('Failed to fetch themes');
             }
 
-            let themes = result.map((edge: any) =>{
+            let themes = result.map((edge: any) => {
                 return {
                     id: Number(edge.node.id.replace('gid://shopify/OnlineStoreTheme/', '')),
                     name: edge.node.name,
@@ -39,7 +39,7 @@ export const themeController = {
                 }
             });
 
-            res.json({status: true, themes: themes});
+            res.json({ status: true, themes: themes });
         } catch (error) {
             res.status(500).json({
                 error: 'Failed to fetch themes',
@@ -50,15 +50,15 @@ export const themeController = {
 
     // Get all files for a theme
     getThemeFiles: async (req: Request, res: Response) => {
-        const {shop_id, theme_id, app_handle} = req.query;
-        if (!app_handle){
-            res.status(400).json({status:false,error: 'Missing required parameters'});
+        const { shop_id, theme_id, app_handle } = req.query;
+        if (!app_handle) {
+            res.status(400).json({ status: false, error: 'Missing required parameters' });
             return
         }
 
-        const {domain, access_token} = await themeController.getAccessToken(Number(shop_id), app_handle as string);
+        const { domain, access_token } = await themeController.getAccessToken(Number(shop_id), app_handle as string);
         if (!access_token) {
-            res.status(404).json({status:false,error: 'Access token not found'});
+            res.status(404).json({ status: false, error: 'Access token not found' });
             return
         }
 
@@ -68,7 +68,7 @@ export const themeController = {
             if (!files) {
                 throw new Error('Failed to fetch assets');
             }
-            res.json({status: true, files: files});
+            res.json({ status: true, files: files });
         } catch (error) {
             console.error('Error fetching assets:', error);
             res.status(500).json({
@@ -82,23 +82,23 @@ export const themeController = {
     // Get content of a specific file
     getFileContent: async (req: Request, res: Response) => {
         try {
-            const {shop_id, theme_id, file_name, app_handle} = req.query;
+            const { shop_id, theme_id, file_name, app_handle } = req.query;
 
             if (!shop_id || !theme_id || !file_name || !app_handle) {
-                res.status(400).json({status:false,error: 'Missing required parameters'});
+                res.status(400).json({ status: false, error: 'Missing required parameters' });
                 return
             }
 
-            const {domain, access_token} = await themeController.getAccessToken(Number(shop_id), app_handle as string);
+            const { domain, access_token } = await themeController.getAccessToken(Number(shop_id), app_handle as string);
             if (!access_token) {
-                res.status(404).json({status:false,error: 'Access token not found'});
+                res.status(404).json({ status: false, error: 'Access token not found' });
                 return
             }
 
             const service = createThemeService(domain, access_token);
 
             const content = await service.findContent(Number(theme_id), file_name as string);
-            res.json({status: true, content});
+            res.json({ status: true, content });
         } catch (error) {
             res.status(500).json({
                 error: 'Failed to fetch file content',
@@ -110,22 +110,22 @@ export const themeController = {
     // Save file content
     saveFile: async (req: Request, res: Response) => {
         try {
-            const {shop_id, theme_id, file_name, content, app_handle} = req.body;
-            if (!app_handle){
-                res.status(400).json({status:false,error: 'Missing required parameters'});
+            const { shop_id, theme_id, file_name, content, app_handle } = req.body;
+            if (!app_handle) {
+                res.status(400).json({ status: false, error: 'Missing required parameters' });
                 return
             }
 
-            const {domain, access_token} = await themeController.getAccessToken(Number(shop_id), app_handle);
+            const { domain, access_token } = await themeController.getAccessToken(Number(shop_id), app_handle);
             if (!access_token) {
-                res.status(404).json({status:false,error: 'Access token not found'});
+                res.status(404).json({ status: false, error: 'Access token not found' });
                 return
             }
 
             const service = createThemeService(domain, access_token);
             const result = service.updateContent(Number(theme_id), file_name, content);
 
-            res.json({status: true, result});
+            res.json({ status: true, result });
 
         } catch (error) {
             res.status(500).json({
@@ -135,9 +135,9 @@ export const themeController = {
         }
     },
 
-    getAccessToken: async (shopId: number, app_handle? :string) => {
+    getAccessToken: async (shopId: number, app_handle?: string) => {
         try {
-            if (app_handle === 'go'){
+            if (app_handle === 'go') {
                 const auth = await Auth.findOne({
                     shop_id: Number(shopId)
                 });
@@ -156,7 +156,7 @@ export const themeController = {
                 }
             }
 
-        const shop   = await findByShopId(shopId);
+            const shop = await findByShopId(shopId);
             if (!shop) {
                 return {}
             }
@@ -165,7 +165,6 @@ export const themeController = {
                 domain: shop.shop_name,
                 access_token: shop.access_token
             }
-
         } catch (error) {
             console.log('Error fetching access token:', error);
             return {}

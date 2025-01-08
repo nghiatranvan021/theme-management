@@ -7,6 +7,7 @@ export const config = {
         url: process.env.MONGODB_URL || 'mongodb://localhost:27017/theme-manager',
     },
     mysql: {
+        dsn: process.env.MYSQL_DSN || '',
         host: process.env.MYSQL_HOST || 'localhost',
         port: Number(process.env.MYSQL_PORT) || 3306,
         user: process.env.MYSQL_USER || 'root',

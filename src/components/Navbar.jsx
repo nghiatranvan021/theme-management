@@ -10,13 +10,18 @@ const Navbar = () => {
     <nav>
       <div className="nav-wrapper">
         <Link to="/" className="brand-logo">
+          <img 
+            src="/logo.svg" 
+            alt="Theme Management Logo" 
+            className="nav-logo"
+          />
           Theme Management
         </Link>
         <div className="nav-right">
-          <ul className="nav-items">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/shops">Shops</Link></li>
-          </ul>
+          {/* <ul className="nav-items"> */}
+            {/* <li><Link to="/">Home</Link></li> */}
+            {/* <li><Link to="/shops">Shops</Link></li> */}
+          {/* </ul> */}
           <button 
             onClick={toggleTheme}
             className="theme-toggle-btn"
